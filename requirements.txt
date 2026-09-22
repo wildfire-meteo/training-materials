@@ -1,0 +1,4 @@
+# What builds the book: Jupyter Book, a kernel to execute the notebooks, and odet_meteo.
+jupyter-book==2.1.6
+ipykernel
+-e .

@@ -1,0 +1,19 @@
+[project]
+name = "odet-meteo"
+version = "0.0.1"
+description = "Thermodynamics and skew-T plotting for the ODET wildfire-atmosphere training"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "plotly",
+]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["odet_meteo*"]
+
+[tool.setuptools.package-data]
+odet_meteo = ["data/*.csv"]

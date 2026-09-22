@@ -1,0 +1,14 @@
+version: 1
+project:
+  title: Wildfire meteorology - training materials
+  description: Skew-T log-p diagrams and wildfire-atmosphere interactions, for the ODET training.
+  github: https://github.com/wildfire-meteo/training-materials
+  license: Apache-2.0
+  exclude:
+    - Module*.ipynb
+    - unit2MC/**
+    - CLAUDE.md
+  toc:
+    - file: notebooks/00_sample_skewT.ipynb
+site:
+  template: book-theme

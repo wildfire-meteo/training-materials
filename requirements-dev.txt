@@ -1,0 +1,3 @@
+# For writing the notebooks: everything that builds the book, plus JupyterLab.
+-r requirements.txt
+jupyterlab
