@@ -14,4 +14,7 @@ if [ ! -d .venv ]; then
 fi
 .venv/bin/pip install --quiet --disable-pip-version-check -r requirements.txt
 
-PATH="$PWD/.venv/bin:$PATH" exec jupyter book start --execute
+export PATH="$PWD/.venv/bin:$PATH"
+# The execution cache is keyed on the notebooks only, so changes to odet_meteo/ would not show.
+jupyter book clean --execute --yes > /dev/null
+exec jupyter book start --execute

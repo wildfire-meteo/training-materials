@@ -209,7 +209,7 @@ def profile_trace(name, color, T, p, z=None, dash="solid", width=LW_PROFILE, **k
 ALL_LINES = ("isobars", "isotherms", "isohumes", "dry_adiabats", "moist_adiabats")
 
 
-def skewt_figure(sounding=None, lines=ALL_LINES, dewpoint=True, p_top=10_000, height=650):
+def skewt_figure(sounding=None, lines=ALL_LINES, dewpoint=True, p_top=10_000, height=730):
     """
     Draw a skew-T log-p diagram, optionally with a sounding on it.
 
@@ -276,5 +276,7 @@ def skewt_figure(sounding=None, lines=ALL_LINES, dewpoint=True, p_top=10_000, he
     fig.update_layout(
         height=height, margin=dict(l=70, r=20, t=30, b=60), font=dict(size=FONT_SIZE),
         plot_bgcolor="white", paper_bgcolor="white", hovermode="closest",
-        legend=dict(title="Click to show or hide", font=dict(size=12)))
+        # Legend in rows above the plot, so the diagram keeps the full width.
+        legend=dict(orientation="h", x=0, xanchor="left", y=1.01, yanchor="bottom",
+                    title=dict(text="Click to show or hide:", side="top"), font=dict(size=12)))
     return fig

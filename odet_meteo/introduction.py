@@ -187,7 +187,7 @@ def skew_slider_figure(sounding, skew_factors=np.linspace(0, skewt.SKEW_FACTOR, 
                              np.broadcast_to(p_iso / 100, bg["isotherms"].shape))
 
     x_range = (-70, 50)
-    fig = skewt.skewt_figure(lines=("isobars",), height=620)
+    fig = skewt.skewt_figure(lines=("isobars",), height=700)
     fig.data[0].x = np.where(np.isnan(fig.data[0].x), np.nan, np.where(fig.data[0].x < 0, x_range[0], x_range[1]))
     x_iso, y_iso = isotherm_xy(skew_factors[0])
     fig.add_trace(go.Scatter(
@@ -209,7 +209,7 @@ def skew_slider_figure(sounding, skew_factors=np.linspace(0, skewt.SKEW_FACTOR, 
     fig.update_xaxes(range=x_range, tickvals=ticks, ticktext=[f"{t}°" for t in ticks])
     fig.update_layout(
         sliders=[dict(steps=steps, active=0, currentvalue=dict(prefix="Skew: "), pad=dict(t=60))],
-        height=710)
+        height=790)
     return fig
 
 
@@ -222,7 +222,7 @@ def buoyancy_quiz_figure(sounding, parcels=QUIZ_PARCELS):
     The sounding with a few parcels next to it; hovering a parcel explains
     whether it rises or sinks.
     """
-    fig = skewt.skewt_figure(sounding, lines=("isobars", "isotherms"), dewpoint=False, height=620)
+    fig = skewt.skewt_figure(sounding, lines=("isobars", "isotherms"), dewpoint=False, height=700)
     for name, p, dT in parcels:
         T_env = prcl.interp_log_p(p, sounding["p"], sounding["T"])
         if dT > 0:
@@ -247,7 +247,7 @@ def dry_ascent_figure(sounding, heights=np.arange(0, 2_801, 200)):
     """
     T0, p0 = sounding["T"][0], sounding["p"][0]
     fig = skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "dry_adiabats"),
-                             dewpoint=False, height=620)
+                             dewpoint=False, height=700)
     steps, annotations = [], []
     for z in heights:
         p_path = np.geomspace(p0, _p_at_height(sounding, z), 30)
@@ -280,7 +280,7 @@ def dewpoint_figure(sounding):
     """
     The sounding with its dew point.
     """
-    return skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "dry_adiabats"), height=620)
+    return skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "dry_adiabats"), height=700)
 
 
 def isohumes_figure(sounding):
@@ -288,7 +288,7 @@ def isohumes_figure(sounding):
     The sounding with its dew point and the isohumes.
     """
     return skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "isohumes", "dry_adiabats"),
-                              height=620)
+                              height=700)
 
 
 def lcl_construction_figure(sounding):
@@ -302,7 +302,7 @@ def lcl_construction_figure(sounding):
     p_path = np.geomspace(p0, 70_000, 60)
     z_path = prcl.interp_log_p(p_path, sounding["p"], sounding["z"])
 
-    fig = skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "isohumes", "dry_adiabats"), height=620)
+    fig = skewt.skewt_figure(sounding, lines=("isobars", "isotherms", "isohumes", "dry_adiabats"), height=700)
     start = [
         skewt.profile_trace("Surface temperature", skewt.COLOR_T, np.array([T0]), np.array([p0]), np.array([0.0]),
                             mode="markers", marker=dict(size=14, color=skewt.COLOR_T), showlegend=False),
@@ -340,7 +340,7 @@ def moist_ascent_figure(sounding):
     """
     rise = prcl.lift_surface_parcel(sounding)
     T0, p0 = sounding["T"][0], sounding["p"][0]
-    fig = skewt.skewt_figure(sounding, height=650)
+    fig = skewt.skewt_figure(sounding, height=730)
     p_dry = np.geomspace(rise["p_lcl"], 40_000, 40)
     fig.add_trace(skewt.profile_trace(
         "Without condensation (dry adiabat)", COLOR_PARCEL_ALT, prcl.dry_adiabat(T0, p0, p_dry), p_dry,
@@ -357,7 +357,7 @@ def pyrocloud_figure(sounding, heating=np.arange(0, 4.01, 0.5)):
     """
     The surface parcel heated by the fire, with a slider over the heating.
     """
-    fig = skewt.skewt_figure(sounding, height=650)
+    fig = skewt.skewt_figure(sounding, height=730)
     steps, annotations = [], []
     for dT in heating:
         rise = prcl.lift_surface_parcel(sounding, dT=dT)
