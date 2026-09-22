@@ -36,6 +36,8 @@ jobs:
           python-version: "3.12"
       - name: Install Jupyter Book and odet_meteo
         run: pip install -r requirements.txt
+      - name: Register the kernel the notebooks are saved with
+        run: python -m ipykernel install --user --name odet-training --display-name "Python (ODET training)"
       - name: Build the book, executing the notebooks
         run: jupyter book build --html --execute
       - uses: actions/upload-pages-artifact@v3

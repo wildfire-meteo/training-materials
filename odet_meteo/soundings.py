@@ -17,43 +17,42 @@
 from pathlib import Path
 
 import numpy as np
+import xarray as xr
 
 DATA_DIR = Path(__file__).parent / "data"
 
 
-def available_soundings():
+def load_model_sounding(name, time, p_top=10_000):
     """
-    List the soundings shipped with the package.
-
-    Returns:
-    -------
-    list of str
-        Names accepted by `load_sounding`.
-    """
-    return sorted(p.stem for p in DATA_DIR.glob("*.csv"))
-
-
-def load_sounding(name):
-    """
-    Load a sounding shipped with the package.
-
-    The data lives inside the package, so it loads without file access from
-    the notebook, which some browsers block in JupyterLite.
+    Load one time of a model sounding exported from the web tool, starting at
+    the surface as the web tool does: the 2 m temperature and dew point at
+    surface pressure, followed by the model levels above the surface.
 
     Parameters:
     ----------
     name : str
-        Sounding name, e.g. "madrid_1998062412" (see `available_soundings`).
+        Name of a netCDF file in the package data, e.g. "progtemps_martorell-example".
+    time : str
+        Time to select, e.g. "2021-07-13T15:00".
+    p_top : float
+        Levels above this pressure (Pa) are dropped.
 
     Returns:
     -------
     dict of np.ndarray, ordered from the surface upward:
         p  : pressure in Pa
-        z  : height above sea level in m
+        z  : height above ground in m
         T  : temperature in K
         Td : dew-point temperature in K
-        u  : eastward wind in m/s
-        v  : northward wind in m/s
+    and "time" : the selected time, as a string.
     """
-    data = np.genfromtxt(DATA_DIR / f"{name}.csv", delimiter=",", names=True)
-    return {key: data[key] for key in data.dtype.names}
+    ds = xr.open_dataset(DATA_DIR / f"{name}.nc").sel(time=time)
+    p_sfc = float(ds["surface_pressure"])
+    above = (ds["p"].values < p_sfc) & (ds["p"].values >= p_top)
+    return {
+        "p":    np.r_[p_sfc, ds["p"].values[above]],
+        "z":    np.r_[0.0, ds["z_agl"].values[above]],
+        "T":    np.r_[float(ds["T_2m"]), ds["T"].values[above]],
+        "Td":   np.r_[float(ds["Td_2m"]), ds["Td"].values[above]],
+        "time": str(ds["time"].values)[:16],
+    }

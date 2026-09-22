@@ -9,6 +9,6 @@ project:
     - unit2MC/**
     - CLAUDE.md
   toc:
-    - file: notebooks/00_sample_skewT.ipynb
+    - file: notebooks/1_introduction_skewt.ipynb
 site:
   template: book-theme
